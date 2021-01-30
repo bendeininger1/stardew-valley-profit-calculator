@@ -1,3 +1,5 @@
+import pandas as pd
+
 import json
 #Load crop data
 with open('Crops.json') as f:
@@ -33,8 +35,14 @@ def parsed_crops():
         #print(crops[i][1])
         crops[i][1] = crops[i][1].split(' ')
         #print(crops[i][1])
-    #print(crops)
-    #print('poop')
+        '''
+    ### maybe turn this into a data frame?
+    print('look here')
+    print(crops)
+    data={'Seed Index':,
+          }
+    crops_df=pd.DataFrame(data)
+    '''
     return(crops)
 crops=parsed_crops()
 #print(parsed_crops())
@@ -48,6 +56,5 @@ def parsed_object_information():
     #split dict values into a list using the '/' serparator
         ObjectInformation[i] = ObjectInformation[i].split('/')
         ObjectInformation[i]
-    #print('poop2')
     return(ObjectInformation)
 ObjectInformation=parsed_object_information()

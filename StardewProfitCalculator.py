@@ -1,3 +1,4 @@
+
 import json
 import math
 import numpy as np
@@ -6,18 +7,12 @@ import classes
 import data_import
 import multipliers
 import harvest
+import pandas as pd
 
 
 
 
-###create an object that has the stuff needed to calc for each crop
 
-'''
-def extra_harvest(min_harvest,max_harvest,max_harvest_increase_per_farming_level,chance_for_extra_crops,farming_level):
-    if min_harvest >1 and max_harvest >1:
-        min(min_harvest + 1,max_harvest + 1 + farming_level/max_harvest_increase_per_farming_level)
-    if chance_for_extra_crops > 0.0:
-'''
 
 ###Main
 #inputs, make this so there can be up to x amount of crops?
@@ -35,8 +30,11 @@ seed2input=['475',plant_count_input]
 #crop1=classes.SeedSelection()
 
 quality_multiplier_value=multipliers.quality_multiplier(farming_level_input)
+
+#sets up seed1
 seed1 = classes.SeedSelection(seed1input[0],seed1input[1])
 
+print (seed1)
 print(data_import.crops[seed1input[0]])
 print(str(seed1.seed_name)+' seed_name')
 print(str(seed1.crop_name)+' crop_name')
@@ -47,23 +45,25 @@ print(str(seed1.crop_price)+' crop_price')
 print(str(seed1.days_to_grow)+' days_to_grow')
 print(str(seed1.regrowth_days)+' regrowth_days')
 print(str(seed1.growing_seasons)+' growing_seasons')
-print('''
-      Calculation''')
-
-plot_points_seed1=harvest.harvest_calculation(seed1.crop_count,
-                                      seed1.days_to_grow,
-                                      seed1.regrowth_days,
-                                      agriculturist_input,
-                                      seed1.harvest_multiplier,
-                                      quality_multiplier_value,
-                                      seed1.seed_price,
-                                      seed1.crop_price,
-                                      1,
-                                      seed1.growing_seasons,
-                                      current_season,
-                                      current_day)
 
 
+seed1_df=harvest.harvest_calculation(seed1.crop_count,
+                                     seed1.days_to_grow,
+                                     seed1.regrowth_days,
+                                     agriculturist_input,
+                                     seed1.harvest_multiplier,
+                                     quality_multiplier_value,
+                                     seed1.seed_price,
+                                     seed1.crop_price,
+                                     1,
+                                     seed1.growing_seasons,
+                                     current_season,
+                                     current_day)
+
+
+
+
+'''
 plt.figure()
 plt.subplot(211,ylabel='Total Profits')
 plt.title('Profit Calculations of '+str(seed1.crop_name))
@@ -72,5 +72,12 @@ plt.plot(plot_points_seed1[0],plot_points_seed1[1],'g',plot_points_seed1[0],plot
 plt.subplot(212,ylabel='Average Profits',xlabel='Day')
 plt.plot(plot_points_seed1[0],plot_points_seed1[4],'b')
 plt.show()
+'''
+
+
+
+
+
+
 
 

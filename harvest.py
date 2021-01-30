@@ -1,3 +1,5 @@
+import pandas as pd
+
 def harvest_calculation(crop_count,
                         days_to_grow,
                         regrowth_days,
@@ -42,14 +44,13 @@ def harvest_calculation(crop_count,
     average_profit=0.0
     days_elapsed=0
     ###Replace the above values with the lists below and rename the lists
+    
     days_elapsed_list=[days_elapsed]#used for graphing proifts
     total_profit_list=[total_profit]
     total_expense_list=[total_expense]
     total_expense_list_negative=[-total_expense]
     total_revenue_list=[total_revenue]
     average_profit_list=[average_profit]
-    print('day ' +str(display_day)+', '+str(days_elapsed)+' days elapsed, '+str(round(total_crops_grown)) +' total crops grown, '+str(round(total_expense))+' total expense, ' 
-          + str(round(total_revenue))+' total_revenue, '+str(round(total_profit))+' total profit, '+str(round(average_profit,2))+' average profit')
     while days_remaining > 0:
         if regrowth_days == -1:#crops that dont regrow
             if days_remaining<days_to_grow:#dont plant if they there is not enough time to 
@@ -99,7 +100,14 @@ def harvest_calculation(crop_count,
         #print(days_elapsed_list)
         #print(total_profit_list)
         ### Will need to save this data in a variable.
-        print('day ' +str(display_day)+', '+str(days_elapsed)+' days elapsed, '+str(round(total_crops_grown)) +' total crops grown, '+str(round(total_expense))+' total expense, '
-              + str(round(total_revenue))+' total_revenue, '+str(round(total_profit))+' total profit, '+str(round(average_profit,2))+' average profit '+ str(days_remaining)+' days remaining')
-    return(days_elapsed_list,total_profit_list,total_revenue_list,total_expense_list_negative,average_profit_list)
+    #use pandas dataframe to store values
+    data={'Day':days_elapsed_list,
+          'Total Profit':total_profit_list,
+          'Total Revenue':total_revenue_list,
+          'Total Expenses Negative':total_expense_list_negative,
+          'Average Profit':average_profit_list}
+    df = pd.DataFrame(data)
+    print(df)
+    return(df)
+    #return(days_elapsed_list,total_profit_list,total_revenue_list,total_expense_list_negative,average_profit_list)
 #count of harvest if multiple seasons
