@@ -1,4 +1,5 @@
 
+
 import json
 import math
 import numpy as np
@@ -7,8 +8,6 @@ import classes
 import data_import
 import multipliers
 import harvest
-import pandas as pd
-
 
 
 
@@ -17,51 +16,51 @@ import pandas as pd
 ###Main
 #inputs, make this so there can be up to x amount of crops?
 farming_level_input = 10 #int from 0 to 13
-tiller_input = False #True or False
-artisan_input = False #True or False
-agriculturist_input = False #True or False
 current_day = 1 #int from 1 to 28
 current_season = 'spring' #string 'spring', 'summer', 'fall, 'winter'
+current_year = 1
+deluxe_speed_gro_location='Pierres'#can be 'Pierres' or 'Oasis'
+fertilizer_input ='None'#cant buy 'Hyper Speed-Gro' or 'Deluxe Fertilizer'
+fertilizer_buy_input = True #True or False
+farming_skills_input = 'Tiller' #None, Tiller, Agriclut, Artisian
+
 #money_input = 100000.0 #float, but will only allow them to enter ints
 plant_count_input = 1 #int
-seed1input=['474',plant_count_input]
-seed2input=['475',plant_count_input]
+
+###take out of main?
+crop_list_keys = list(data_import.crops.keys())
+crop_list=[]
+for i in range(len(crop_list_keys)):
+    crop_list.append({'label':classes.SeedSelection(crop_list_keys[i], 1).crop_name,'value':crop_list_keys[i]})
+
+
+
+seedinput=['475',plant_count_input]
 
 #crop1=classes.SeedSelection()
 
-quality_multiplier_value=multipliers.quality_multiplier(farming_level_input)
+quality_multiplier_value=multipliers.quality_multiplier(farming_level_input,fertilizer_input)
 
 #sets up seed1
-seed1 = classes.SeedSelection(seed1input[0],seed1input[1])
+seed = classes.SeedSelection(seedinput[0],seedinput[1])
+print(seed.crop_name)
+#assigns seed1 to a DataFrame
+seed_df=harvest.harvest_calculation(seed,farming_skills_input,classes.Fertilizer(fertilizer_input,True,farming_level_input),current_season,current_day)
 
-print (seed1)
-print(data_import.crops[seed1input[0]])
-print(str(seed1.seed_name)+' seed_name')
-print(str(seed1.crop_name)+' crop_name')
-print(str(seed1.crop_count)+' crop_count')
-print(str(seed1.harvest_multiplier)+' harvest_multiplier')
-print(str(seed1.seed_price)+' seed_price')
-print(str(seed1.crop_price)+' crop_price')
-print(str(seed1.days_to_grow)+' days_to_grow')
-print(str(seed1.regrowth_days)+' regrowth_days')
-print(str(seed1.growing_seasons)+' growing_seasons')
-
-
-seed1_df=harvest.harvest_calculation(seed1.crop_count,
-                                     seed1.days_to_grow,
-                                     seed1.regrowth_days,
-                                     agriculturist_input,
-                                     seed1.harvest_multiplier,
-                                     quality_multiplier_value,
-                                     seed1.seed_price,
-                                     seed1.crop_price,
-                                     1,
-                                     seed1.growing_seasons,
-                                     current_season,
-                                     current_day)
-
-
-
+'''
+seed_df=harvest.harvest_calculation(seed.crop_count,
+                                    seed.days_to_grow,
+                                    seed.regrowth_days,
+                                    agriculturist_input,
+                                    seed.harvest_multiplier,
+                                    quality_multiplier_value,
+                                    seed.seed_price,
+                                    seed.crop_price,
+                                    1,
+                                    seed.growing_seasons,
+                                    current_season,
+                                    current_day)
+'''
 
 '''
 plt.figure()

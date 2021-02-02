@@ -18,6 +18,7 @@ Harvest Method,Chance for extra harvest false or true
 def parsed_crops():
     for i in crops:
         #split dict values into a list using the '/' serparator
+        #print(str(i)+str(crops[i]))
         crops[i] = crops[i].split('/')
         #split the 'days in each cycle' into a list, covnerts to int, then sum that list returing  total days to grow
         crops[i][0] = sum([int (x) for x in crops[i][0].split(' ')])
@@ -46,6 +47,7 @@ def parsed_crops():
     return(crops)
 crops=parsed_crops()
 #print(parsed_crops())
+
 
 '''parse the object information
 "493": "Cranberry Seeds/120/-300/Seeds -74/Cranberry Seeds/Plant these in the fall.
