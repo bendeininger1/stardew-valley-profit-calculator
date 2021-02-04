@@ -34,6 +34,13 @@ seedinput='475'
 #money_input = 100000.0 #float, but will only allow them to enter ints
 crop_count_input = 1 #int
 
+#initial setup for display
+#sets up seed
+seed = classes.SeedSelection(seedinput,crop_count_input)
+
+#assigns seed to a DataFrame
+seed_df=harvest.harvest_calculation(seed,farming_skills_input,classes.Fertilizer(fertilizer_input,True,farming_level_input),current_season,current_day)
+
 ###take out of main?
 crop_list_keys = list(data_import.crops.keys())
 crop_list=[]
@@ -46,70 +53,101 @@ for i in range(len(crop_list_keys)):
 
 
 
-quality_multiplier_value=multipliers.quality_multiplier(farming_level_input,fertilizer_input)
+#quality_multiplier_value=multipliers.quality_multiplier(farming_level_input,fertilizer_input)
 
-#initial setup for display
-#sets up seed
-seed = classes.SeedSelection(seedinput,crop_count_input)
-
-#assigns seed to a DataFrame
-seed_df=harvest.harvest_calculation(seed,farming_skills_input,classes.Fertilizer(fertilizer_input,True,farming_level_input),current_season,current_day)
 
 
 
 ### Website stuffs
 
+
+'''
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+'''
+app = dash.Dash(__name__)
 
 server = app.server
 
-#df = pd.read_csv('https://gist.githubusercontent.com/chriddyp/5d1ea79569ed194d432e56108a04d188/raw/a9f9e8076b837d541398e999dcbac2b2826a81f8/gdp-life-exp-2007.csv')
-
-
+#inital setup of charts
 fig = px.line(seed_df, x="Display Day", y=["Total Profit", "Total Revenue","Total Expenses Negative"],
               title="Stardew Valley Profit Calculator")
 
 average_profit_fig = px.line(seed_df, x="Display Day", y="Average Profit",title="Average Profits")
-
-app.layout = html.Div([
+app.layout =html.Div([
     html.Div([
+        html.Div([html.H1('Stardew Valley Profit Calculator')], id='title'),
         html.Div([
-            dcc.Graph(id='Profit Graph',figure=fig)],
-        ),
-        html.Div([
-            dcc.Graph(id='Average Profit Graph',figure=average_profit_fig)],
-        ),
-    ],style={'columnCount': 2}),
-    html.Div([
-        dcc.Dropdown(
-                options=crop_list,
-                placeholder='Select a crop',
-                value='472',
-                id = 'crop-selection-input'
+            html.Div([
+                dcc.Graph(id='Profit Graph',figure=fig)],className='graphs',
             ),
-        dcc.RadioItems(
-            options=[
-                {'label': 'spring', 'value': 'spring'},
-                {'label': 'summer', 'value': 'summer'},
-                {'label': 'fall', 'value': 'fall'}
-            ],
-            value='spring',
-            id='season-input'
-        ),
-        dcc.Input(
-            id='current-day-input',
-            type='number',
-            placeholder='input current day',
-            value=current_day,   
-        ),
-        html.Div(id='crop-selection-output'),
-    ],style={'borderBottom': 'thin lightgrey solid'})
-],style={'borderBottom': 'thin lightgrey solid'})
+            html.Div([
+                dcc.Graph(id='Average Profit Graph',figure=average_profit_fig)],className='graphs',
+            ),
+        ],style={'columnCount': 2},id = 'graphbody'),
+        html.Div([
+            html.Table([
+                html.Tr([
+                    html.Td('Crop Selection'),
+                    html.Th([
+                    dcc.Dropdown(
+                        options=crop_list,
+                        placeholder='Select a crop',
+                        value='472',
+                        id = 'crop-selection-input'
+                        )
+                    ])
+                    ]),
+                html.Tr([
+                    html.Td('Season Selection'),
+                    html.Th([
+                        dcc.RadioItems(
+                            options=[
+                                {'label': 'spring', 'value': 'spring'},
+                                {'label': 'summer', 'value': 'summer'},
+                                {'label': 'fall', 'value': 'fall'}
+                                ],
+                            value='spring',
+                            id='season-input'
+                            )
+                    ])
+                    ]),
+                html.Tr([
+                    html.Td('Starting Day Selection'),
+                    html.Th([
+                    dcc.Input(
+                        id='current-day-input',
+                        type='number',
+                        placeholder='input current day',
+                        value=current_day,   
+                            ),
+                    ],)
+                    ])
+                ],)
+            ],id='options'),
+        html.Div([html.A('Stardew Valley Copyright © 2016-2020 ConcernedApe LLC',
+                         href='https://www.stardewvalley.net/'),
+            ' |  Source code on my ',
+            html.A('GitHub',href='https://github.com/bendeininger1/stardew-valley-profit-calculator'),
+            html.Div([
+                html.A(rel='license',href='http://creativecommons.org/licenses/by-nc-sa/3.0/'),
+                html.Img(alt='Creative Commons License',
+                         style={'border-width':'0'},
+                         src='https://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png',),
+                html.Br(),
+                'This work is licensed under a ',
+                html.A('Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License',
+                       rel='license',href='http://creativecommons.org/licenses/by-nc-sa/3.0/'),
+                    ])
+            ],id='footer')
+        ])
+    ],id='mainbody'
+)
+
 
 '''
-#callback function to change which crops appear in the dropdown
+#callback function to change which crops appear in the dropdown0
 @app.callback(Output(component_id='crop-selection-output', component_property='children'),
               Input(component_id='crop-selection-input', component_property='value'),
               Input(component_id='season-input', component_property='value'),
@@ -122,8 +160,7 @@ def update_season_dropdown(selected_country):
 
 
 
-@app.callback(Output(component_id='crop-selection-output', component_property='children'), 
-              Output(component_id='current-day-input', component_property='value'),
+@app.callback(Output(component_id='current-day-input', component_property='value'),
               Output('Profit Graph', 'figure'),
               Output('Average Profit Graph', 'figure'),
               Input(component_id='crop-selection-input', component_property='value'),
@@ -150,7 +187,7 @@ def update_figure(input_value_crop,input_value_season,input_value_current_day):
     
     average_profit_fig = px.line(seed_df, x="Display Day", y="Average Profit",title="Average Profits")
     fig.update_layout(transition_duration=500)
-    return 'Output: {}'.format(input_value_crop),input_value_current_day,fig,average_profit_fig
+    return input_value_current_day,fig,average_profit_fig
 
 
 if __name__ == '__main__':
