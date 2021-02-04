@@ -6,5 +6,5 @@ save_non_project_files = False
 
 [main]
 version = 0.2.0
-recent_files = ['classes.py', 'Crops.json', 'data_import.py', 'harvest.py', 'multipliers.py', 'ObjectInformation.json', 'StardewProfitCalculator.py', '..\\..\\Python\\myproject\\myproject\\app.py']
+recent_files = ['app.py', 'harvest.py', 'constants.py', 'classes.py', 'input_checkers.py']
 

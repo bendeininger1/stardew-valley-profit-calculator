@@ -26,11 +26,9 @@ def harvest_calculation(seed,farming_skills,fertilizer,current_season,current_da
     def sell_crops():
         revenue_from_first_crop = crop_count * crop_price * quality_multiplier_first_crop
         revenue_from_other_crops=0
-        print(harvest_multiplier)
         if harvest_multiplier != 1.0:
             revenue_from_other_crops = crop_count * crop_price * (harvest_multiplier-1) * quality_multiplier_other_crops
         total_crop_sale_revenue = revenue_from_first_crop + revenue_from_other_crops
-        print(revenue_from_first_crop,revenue_from_other_crops,total_crop_sale_revenue)
         return(total_crop_sale_revenue)
         #total_revenue += total_revenue +sell_crops 
     
@@ -52,7 +50,11 @@ def harvest_calculation(seed,farming_skills,fertilizer,current_season,current_da
     #print(str(days_remaining)+' days remaining')
     display_day = current_day 
     total_crops_grown=0.0
-    total_expense=float(crop_count*seed_price*2*1)#2* because price is player sell price.  Players buy at 2x this price
+    total_expense=float(crop_count*seed_price*2*1)+ fertilizer.cost#2* because price is player sell price.  Players buy at 2x this 
+    '''
+    if fertilizer.purchase_fertilizer == True:
+        total_expense = total_expense + fertilizer.cost
+        '''
     total_revenue=0.0
     total_profit=total_revenue-total_expense
     average_profit=0.0

@@ -39,33 +39,35 @@ class Fertilizer:
         self.quality_multiplier_other_crops=multipliers.quality_multiplier(farming_level,soil_type)[1]
         self.purchase_fertilizer=purchase_fertilizer
         self.farming_level=farming_level
-        if soil_type == 'Basic Fertilizer':
-            self.cost = 100.0
-        elif soil_type == 'Quality Fertilizer':
-            self.cost = 150.0
-        elif soil_type == 'Deluxe Fertilizer':
-            pass
-            #can't buy 'Deluxe Fertilizer'
-        elif soil_type == 'Speed-Gro':
-            self.growth_multiplier = 1.1
-            self.cost = 20.0
-        elif soil_type == 'Deluxe Speed-Gro':
-            self.growth_multiplier = 1.25
-            if deluxe_speed_gro_location=='Oasis':
-                self.cost = 80.0
-            else:
+        if True == True:
+            if soil_type == 'Basic Fertilizer':
+                self.cost = 100.0
+            elif soil_type == 'Quality Fertilizer':
                 self.cost = 150.0
-        elif soil_type == 'Hyper Speed-Gro':
-            self.growth_multiplier = 1.33
-            #can't buy 'Hyper Speed-Gro'
-        elif soil_type == 'None':
-            self.quality_multiplier_first_crop=multipliers.quality_multiplier(farming_level,soil_type)[0]
-        else:
-            raise Exception("Wrong Fertilizer Selected from fertilizer class")
-'''
+            elif soil_type == 'Deluxe Fertilizer':
+                pass
+                #can't buy 'Deluxe Fertilizer'
+            elif soil_type == 'Speed-Gro':
+                self.growth_multiplier = 1.1
+                self.cost = 20.0
+            elif soil_type == 'Deluxe Speed-Gro':
+                self.growth_multiplier = 1.25
+                if deluxe_speed_gro_location=='Oasis':
+                    self.cost = 80.0
+                else:
+                    self.cost = 150.0
+            elif soil_type == 'Hyper Speed-Gro':
+                self.growth_multiplier = 1.33
+                #can't buy 'Hyper Speed-Gro'
+            elif soil_type == 'None':
+                self.cost = 0.0
+                self.quality_multiplier_first_crop=multipliers.quality_multiplier(farming_level,soil_type)[0]
+            else:
+                raise Exception("Wrong Fertilizer Selected from fertilizer class")
         if purchase_fertilizer == False:
-            self.cost = 0
-'''
+            self.cost = 0.0
+            print('poopy')
+
         
         
         
