@@ -23,31 +23,17 @@ import input_checkers
 ###Main
 
 
-###These might not be needed at all....
-#inputs, make this so there can be up to x amount of crops?
-farming_level_input = 0 #int from 0 to 13
-#current_day = 1 #int from 1 to 28
-#current_season = 'spring' #string 'spring', 'summer', 'fall, 'winter'
+###Need to remove these
+
 current_year = 1
 deluxe_speed_gro_location='Pierres'#can be 'Pierres' or 'Oasis'
-fertilizer_input ='None'#cant buy 'Hyper Speed-Gro' or 'Deluxe Fertilizer'
-fertilizer_buy_input = True #True or False
-farming_skills_input = 'None' #None, Tiller, Agriclut, Artisian
-#seedinput='475'
 
 
-'''
-#initial setup for display
-#sets up seed
-seed = classes.SeedSelection(seedinput,crop_count_input)
-
-#assigns seed to a DataFrame
-seed_df=harvest.harvest_calculation(seed,farming_skills_input,classes.Fertilizer(fertilizer_input,True,farming_level_input),current_season,current_day)
-'''
 
 
 ###take out of main?
 ###move to crops list
+#creates an object for each crop type
 crop_list_keys = list(data_import.crops.keys())
 crop_list=[]
 crop_seed_list=[]
@@ -55,6 +41,11 @@ for i in range(len(crop_list_keys)):
     crop_list.append({'label':classes.SeedSelection(crop_list_keys[i], 1).crop_name,'value':crop_list_keys[i]})
     crop_seed_list.append(classes.SeedSelection(crop_list_keys[i],1))
     #print(crop_seed_list[i].growing_seasons)
+
+'''
+for i in range(len(crop_list_keys)):
+    print (crop_seed_list[i].growing_seasons)
+'''
 '''
 for i in range(len(crop_seed_list[i].growing_seasons)):
     print (crop_seed_list[i].growing_seasons)
@@ -102,7 +93,7 @@ app.layout =html.Div([
                             dcc.Dropdown(options=crop_list,value='472',id = 'crop-selection-input')])
                             ]),
                         html.Tr([
-                            html.Td('Season Selection'),
+                            html.Td('Starting Season Selection'),
                             html.Th([
                                 dcc.RadioItems(
                                     options=[
@@ -186,24 +177,27 @@ app.layout =html.Div([
 )
 
 
-'''
+
 #callback function to change which crops appear in the dropdown0
-@app.callback(Output(component_id='crop-selection-input', component_property='value'),
+@app.callback(Output(component_id='crop-selection-input', component_property='options'),
+              Output(component_id='crop-selection-input', component_property='value'),
               Input(component_id='season-input', component_property='value'),
               )
 
 def update_season_dropdown(season_input):
-    
-   return [{'label': i, 'value': i} for i in range(len(crop_seed_list[season_input].growing_seasons))]
-
-#crop_seed_list[i].growing_seasons
-'''
-
-'''
-def update_season_dropdown(season-input):
-    
-   return [{'label': i, 'value': i} for i in all_options[selected_country]]
-'''
+    crop_selection_list=[]
+    j=0
+    for i in range(len(crop_list_keys)):
+        if season_input in crop_seed_list[i].growing_seasons:
+            crop_selection_list.append({'label':str(crop_seed_list[i].crop_name),
+                                        'value':str(crop_seed_list[i].seed_number)})
+            if j == 0:#just so it picks the first crop as the default, for improved performance
+                default_crop_value = str(crop_seed_list[i].seed_number)
+                print('default_crop_value '+str(default_crop_value))
+                j=1
+            
+            #print('Test crop_selection_list '+str(crop_selection_list))
+    return crop_selection_list,default_crop_value
 
 
 @app.callback(Output(component_id='current-day-input', component_property='value'),
@@ -237,10 +231,11 @@ def update_figure(input_value_crop,
     input_value_farming_level=input_checkers.farming_level_checker(input_value_farming_level)
     
     print(input_value_crop_count)
+    print('input_value_current_day '+str(input_value_current_day))
     
     seed=classes.SeedSelection(input_value_crop,input_value_crop_count)#get info associated with the crop/seed selected
     seed_df=harvest.harvest_calculation(seed,
-                                        farming_skills_input,
+                                        input_value_farming_skills,
                                         classes.Fertilizer(input_value_fertilizer,
                                                            input_value_buy_fertilizer,
                                                            input_value_farming_level),
