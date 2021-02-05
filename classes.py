@@ -4,7 +4,6 @@ import multipliers
 class SeedSelection:
     def __init__(self,
                  seed_number,#
-                 crop_count,#
                  seed_name=None,
                  crop_name=None,
                  harvest_multiplier=None,
@@ -15,7 +14,6 @@ class SeedSelection:
                  growing_seasons=None):
         
         self.seed_number = int(seed_number)
-        self.crop_count = crop_count 
         self.seed_name = data_import.parsed_object_information[seed_number][0]
         self.crop_name = data_import.parsed_object_information[data_import.parsed_crops[seed_number][3]][0]
         self.harvest_multiplier = multipliers.average_harvest_yield(seed_number)

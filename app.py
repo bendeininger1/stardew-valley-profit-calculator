@@ -38,8 +38,8 @@ crop_list_keys = list(data_import.crops.keys())
 crop_list=[]
 crop_seed_list=[]
 for i in range(len(crop_list_keys)):
-    crop_list.append({'label':classes.SeedSelection(crop_list_keys[i], 1).crop_name,'value':crop_list_keys[i]})
-    crop_seed_list.append(classes.SeedSelection(crop_list_keys[i],1))
+    crop_list.append({'label':classes.SeedSelection(crop_list_keys[i]).crop_name,'value':crop_list_keys[i]})
+    crop_seed_list.append(classes.SeedSelection(crop_list_keys[i]))
     #print(crop_seed_list[i].growing_seasons)
 
 '''
@@ -233,8 +233,9 @@ def update_figure(input_value_crop,
     print(input_value_crop_count)
     print('input_value_current_day '+str(input_value_current_day))
     
-    seed=classes.SeedSelection(input_value_crop,input_value_crop_count)#get info associated with the crop/seed selected
+    seed=classes.SeedSelection(input_value_crop)#get info associated with the crop/seed selected
     seed_df=harvest.harvest_calculation(seed,
+                                        input_value_crop_count,
                                         input_value_farming_skills,
                                         classes.Fertilizer(input_value_fertilizer,
                                                            input_value_buy_fertilizer,

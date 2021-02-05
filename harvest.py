@@ -1,11 +1,8 @@
 import pandas as pd
 import multipliers
 
-def harvest_calculation(seed,farming_skills,fertilizer,current_season,current_day):
-    
-        
+def harvest_calculation(seed,crop_count,farming_skills,fertilizer,current_season,current_day):
 
-    crop_count = seed.crop_count
     days_to_grow = seed.days_to_grow
     regrowth_days = seed.regrowth_days
     ###farming skills stuff yet not implemented yet
