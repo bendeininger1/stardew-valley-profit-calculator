@@ -25,6 +25,7 @@ def parsed_crops_function():
     crops.pop('273')#remove Rice shoots
     crops.pop('833')#remove Pineapple Seeds
     crops.pop('347')#remove Rare seed
+    crops.pop('831')#remove Taro Tuber
     
     for i in crops:
         #split dict values into a list using the '/' serparator
