@@ -90,7 +90,9 @@ app.layout =html.Div([
                         html.Tr([
                             html.Td('Crop Selection'),
                             html.Th([
-                            dcc.Dropdown(options=crop_list,value='472',id = 'crop-selection-input')])
+                            dcc.Dropdown(options=crop_list,value='472',
+                                         id = 'crop-selection-input',
+                                         multi=True)])
                             ]),
                         html.Tr([
                             html.Td('Starting Season Selection'),
@@ -193,7 +195,7 @@ def update_season_dropdown(season_input):
                                         'value':str(crop_seed_list[i].seed_number)})
             if j == 0:#just so it picks the first crop as the default, for improved performance
                 default_crop_value = str(crop_seed_list[i].seed_number)
-                print('default_crop_value '+str(default_crop_value))
+                #print('default_crop_value '+str(default_crop_value))
                 j=1
             
             #print('Test crop_selection_list '+str(crop_selection_list))
@@ -229,29 +231,90 @@ def update_figure(input_value_crop,
     input_value_crop_count=input_checkers.crop_count_checker(input_value_crop_count)
     input_value_buy_fertilizer=input_checkers.fertilizer_checker(input_value_buy_fertilizer)
     input_value_farming_level=input_checkers.farming_level_checker(input_value_farming_level)
+    input_value_crop=input_checkers.input_value_crop(input_value_crop,input_value_season)
+
+    seed=[]
+    seed_combined_df=pd.DataFrame()
+    if type(input_value_crop) == str:#handle when only 1 crop is selected
+        input_value_crop=[input_value_crop]
     
-    print(input_value_crop_count)
-    print('input_value_current_day '+str(input_value_current_day))
+    print('input_value_crop '+str(input_value_crop))
+    print(type(input_value_crop))
+    print(len(input_value_crop))
+    print(range(len(input_value_crop)))
     
-    seed=classes.SeedSelection(input_value_crop)#get info associated with the crop/seed selected
-    seed_df=harvest.harvest_calculation(seed,
-                                        input_value_crop_count,
-                                        input_value_farming_skills,
-                                        classes.Fertilizer(input_value_fertilizer,
-                                                           input_value_buy_fertilizer,
-                                                           input_value_farming_level),
-                                        input_value_season,
-                                        input_value_current_day)
     
-    fig = px.line(seed_df, x="Display Day", y=["Total Profit", "Total Revenue","Total Expenses Negative"],
-                  title="Stardew Valley Profit Calculator")
+    for i in range(len(input_value_crop)):
+        '''
+        print('i '+str(i))
+        print('input_value_crop '+str(input_value_crop[i]))
+        '''
+        seed=classes.SeedSelection(input_value_crop[i])#get info associated with the crop/seed selected
+        print(str(seed.crop_name)+str(i))
+        if i == 0:
+            seed_combined_df=harvest.harvest_calculation(seed,
+                                                         input_value_crop_count,
+                                                         input_value_farming_skills,
+                                                         classes.Fertilizer(input_value_fertilizer,
+                                                                            input_value_buy_fertilizer,
+                                                                            input_value_farming_level),
+                                                         input_value_season,
+                                                         input_value_current_day)
+            #melted=pd.melt(seed_combined_df,id_vars=['Display Day'],value_vars=['Total Profit','Total Revenue','Total Expenses Negative'])
+            #print(melted)
+            #print(seed_combined_df)
+            #df_test = px.data.tips()
+            #print(df_test)
+            
+        if i >0:
+            seed_df=harvest.harvest_calculation(seed,
+                                                input_value_crop_count,
+                                                input_value_farming_skills,
+                                                classes.Fertilizer(input_value_fertilizer,
+                                                                   input_value_buy_fertilizer,
+                                                                   input_value_farming_level),
+                                                input_value_season,
+                                                input_value_current_day)
+            df=[seed_combined_df,seed_df]
+            seed_combined_df = pd.concat(df)
+            #print(seed_combined_df)
+
+    '''
+    fig = px.line(seed_combined_df, x="Display Day", y=["Total Profit", "Total Revenue","Total Expenses Negative"],
+                  title="Stardew Valley Profit Calculator",
+                  color='Seed Name',
+                  labels={'Seed Name'})
     
-    average_profit_fig = px.line(seed_df, x="Display Day", y="Average Profit",title="Average Profits")
+
+    #average_profit_fig = px.line(seed_combined_df, x="Display Day", y="Average Profit",title="Average Profits",color='Seed Name')
+    average_profit_fig = px.line(melted, x="Display Day", y="variable",title="Test")
+    '''
+    excluding_profits_df=seed_combined_df[seed_combined_df['Finance Category']!='Average Profits']
+    fig = px.line(excluding_profits_df, x='Day', y='Values',
+                  title="Stardew Valley Profit Calculator",
+                  color='Finance Category',
+                  line_group='Crop',
+                  )###add labels for seed_name
+    #profits_df=seed_combined_df.query('`Finance Category` == `Average Profits`')
+    profits_df=seed_combined_df[seed_combined_df['Finance Category']=='Average Profits']
+    #print(profits_df.values)
+    #print(excluding_profits_df.values)
+    
+    average_profit_fig=px.line(profits_df, x='Day', y='Values',title='Average Profits',
+                  color='Finance Category',line_group='Crop')###add labels for seed_name
+
+    #labels={'Seed Name'}
+    #average_profit_fig =fig
+    #average_profit_fig = px.line(seed_combined_df, x="Display Day", y="Average Profit",title="Average Profits",color='Seed Name')
+    
     fig.update_layout(transition_duration=500)
+    fig.update_yaxes(type='linear')
+    average_profit_fig.update_yaxes(type='linear')
     return input_value_current_day,input_value_crop_count,input_value_farming_level,fig,average_profit_fig
 
 
 if __name__ == '__main__':
+    import unittest
     app.run_server(debug=True)
 
 

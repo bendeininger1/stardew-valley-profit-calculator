@@ -1,5 +1,6 @@
 import pandas as pd
 import multipliers
+import numpy as np
 
 def harvest_calculation(seed,crop_count,farming_skills,fertilizer,current_season,current_day):
 
@@ -54,11 +55,11 @@ def harvest_calculation(seed,crop_count,farming_skills,fertilizer,current_season
         '''
     total_revenue=0.0
     total_profit=total_revenue-total_expense
-    average_profit=0.0
+    average_profit=float(0.0)
     days_elapsed=0
     day=1
     ###Replace the above values with the lists below and rename the lists
-    
+    '''
     display_day_list=[]
     day_list=[]
     days_elapsed_list=[]#used for graphing proifts
@@ -68,6 +69,12 @@ def harvest_calculation(seed,crop_count,farming_skills,fertilizer,current_season
     total_expense_list_negative=[]
     total_revenue_list=[]
     average_profit_list=[]
+    '''
+    #values=[]
+    data = np.array([[day,total_revenue,'Total Revenue',seed.crop_name],
+                     [day,total_expense*-1.0,'Total Expenses Negative',seed.crop_name],
+                     [day,total_profit,'Total Profit',seed.crop_name],
+                     [day,average_profit,'Average Profits',seed.crop_name]])
     #print('regrowth days ' +str(regrowth_days))
     while days_remaining >= 0:
         if regrowth_days == -1:#crops that dont regrow
@@ -95,7 +102,7 @@ def harvest_calculation(seed,crop_count,farming_skills,fertilizer,current_season
         #extra crops calculations (they are not impact by quality fertilizer)
         
         ## average profits section
-        average_profit=float(total_profit)/day
+        average_profit=float(total_profit)/float(day)
         '''
        
         if regrowth_days>0:#multiple harvests
@@ -109,7 +116,7 @@ def harvest_calculation(seed,crop_count,farming_skills,fertilizer,current_season
             else:
                 average_profit=float(total_profit)/day
         '''
-        
+        '''
         #print('days elapsed '+ str(days_elapsed))
         day_list.append(day)
         days_elapsed_list.append(days_elapsed)#used for graphing proifts
@@ -120,29 +127,54 @@ def harvest_calculation(seed,crop_count,farming_skills,fertilizer,current_season
         total_expense_list_negative.append(-total_expense)
         average_profit_list.append(average_profit)
         display_day_list.append(display_day)
+        '''
         
+        data = np.append(data,[[day,round(total_revenue,2),'Total Revenue',seed.crop_name],
+                     [day,round(total_expense*-1),'Total Expenses Negative',seed.crop_name],
+                     [day,round(total_profit),'Total Profit',seed.crop_name],
+                     [day,round(average_profit,2),'Average Profits',seed.crop_name]],axis=0)
+        #data = np.array([[day,'Total Revenue'],[day,'Total Expenses Negative'],[day,'Total Profit']])        
         days_remaining += -1
         display_day += 1
         day+=1
         
         days_elapsed += 1
-        
-        #print(days_elapsed_list)
-        #print(total_profit_list)
-        ### Will need to save this data in a variable.
-    #use pandas dataframe to store values
-    data={'Display Day':display_day_list,
-          'Day':day_list,
-          'Days Elapsed':days_elapsed_list,
-          'Days Remaining':days_remaining_list,
-          'Total Revenue':total_revenue_list,
-          'Total Expenses Negative':total_expense_list_negative,
-          'Total Profit':total_profit_list,
-          'Average Profit':average_profit_list}
-    df = pd.DataFrame(data)
-    print(df)
+
+    df=pd.DataFrame(data,columns=['Day','Values','Finance Category','Crop'])
+    #sorts array
+    #df.Day=pd.to_numeric(df.Day, errors='coerce')
+    #df.sort_values(by=['Finance Category','Day'],inplace=True)
     return(df)
     
 
-    #return(days_elapsed_list,total_profit_list,total_revenue_list,total_expense_list_negative,average_profit_list)
-#count of harvest if multiple seasons
+if __name__ == '__main__':
+    import classes
+    import plotly.express as px
+ 
+    soil_type='Basic Fertilizer'
+    purchase_fertilizer=True
+    farming_level=1
+    farming_skills='None'
+    current_season='spring'
+    current_day=1
+    crop_count=1
+    seed=classes.SeedSelection('472')
+    fertilizer=classes.Fertilizer(soil_type, purchase_fertilizer, farming_level)
+    df=harvest_calculation(seed,crop_count,farming_skills,fertilizer,current_season,current_day)
+    '''
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(df)
+    '''
+    #print(df.values)
+    #print(df.dtypes)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

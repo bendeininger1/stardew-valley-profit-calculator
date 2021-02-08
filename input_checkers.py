@@ -47,3 +47,30 @@ def farming_level_checker(input_value):
     else:
         output_value = input_value
     return output_value
+
+def input_value_crop(input_value,input_season):
+    output_value=input_value
+    if input_value == None:
+        if input_season == 'spring':
+            output_value ='472'
+        if input_season == 'summer':
+            output_value ='479'
+        if input_season == 'fall':
+            output_value ='490'
+    return output_value
+        
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
