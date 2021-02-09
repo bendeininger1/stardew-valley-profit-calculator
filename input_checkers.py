@@ -8,6 +8,7 @@ def current_day_checker(input_value):
         output_value = 1
     elif input_value <1:
         output_value = 1
+    #keeps day value below 28 as seasons are only 28 days long
     elif input_value >27:
         output_value = 27
     else:
@@ -48,13 +49,16 @@ def farming_level_checker(input_value):
         output_value = input_value
     return output_value
 
-def input_value_crop(input_value,input_season):
+def input_value_crop_checker(input_value,input_season):
     output_value=input_value
-    if input_value == None:
+    if (input_value == None or input_value ==[]):
+        #if season is spring, parsnip is default crop
         if input_season == 'spring':
             output_value ='472'
+        #if season is spring, melon is default crop
         if input_season == 'summer':
             output_value ='479'
+        #if season is spring, pumpkin is default crop
         if input_season == 'fall':
             output_value ='490'
     return output_value
