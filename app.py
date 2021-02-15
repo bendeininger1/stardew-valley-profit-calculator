@@ -44,10 +44,6 @@ for i in range(len(crop_list_keys)):
     crop_list.append({'label':classes.SeedSelection(crop_list_keys[i]).crop_name,'value':crop_list_keys[i]})
     crop_seed_list.append(classes.SeedSelection(crop_list_keys[i]))
 
-
-
-
-
 ### Website stuffs
 
 
@@ -232,15 +228,12 @@ def update_figure(input_value_crop,
     seed_combined_df=pd.DataFrame()
     if type(input_value_crop) == str:#handle when only 1 crop is selected
         input_value_crop=[input_value_crop]
-    
-    
+
+    #performs seed class creation and harvest calculations
     for i in range(len(input_value_crop)):
-        '''
-        print('i '+str(i))
-        print('input_value_crop '+str(input_value_crop[i]))
-        '''
-        seed=classes.SeedSelection(input_value_crop[i])#get info associated with the crop/seed selected
-        print(str(seed.crop_name)+str(i))
+        #get info associated with the crop/seed selected
+        seed=classes.SeedSelection(input_value_crop[i])
+        #only 1 crop selected
         if i == 0:
             seed_combined_df=harvest.harvest_calculation(seed,
                                                          input_value_crop_count,
@@ -249,8 +242,8 @@ def update_figure(input_value_crop,
                                                                             input_value_buy_fertilizer,
                                                                             input_value_farming_level),
                                                          input_value_season,
-                                                         input_value_current_day)
-
+                                                         input_value_current_day,)[0]
+        #more than 1 crop selected
         if i >0:
             seed_df=harvest.harvest_calculation(seed,
                                                 input_value_crop_count,
@@ -259,7 +252,8 @@ def update_figure(input_value_crop,
                                                                    input_value_buy_fertilizer,
                                                                    input_value_farming_level),
                                                 input_value_season,
-                                                input_value_current_day)
+                                                input_value_current_day)[0]
+            #concat seed dfs into one df
             df=[seed_combined_df,seed_df]
             seed_combined_df = pd.concat(df)
 
@@ -272,21 +266,14 @@ def update_figure(input_value_crop,
                   line_group='Crop',
                   labels={'Crop':'Seed Name'},
                   hover_name='Crop'
-                  )###add labels for seed_name
-    #profits_df=seed_combined_df.query('`Finance Category` == `Average Profits`')
+                  )
     profits_df=seed_combined_df[seed_combined_df['Finance Category']=='Avg Profits']
-    #print(profits_df.values)
-    #print(excluding_profits_df.values)
     
     average_profit_fig=px.line(profits_df, x='Day', y='Values',title='Average Profits',
                   color='Finance Category of Crop',
                   line_group='Crop',
                   labels={'Crop':'Seed Name'},
-                  hover_name='Crop')###add labels for seed_name
-
-    #labels={'Seed Name'}
-    #average_profit_fig =fig
-    #average_profit_fig = px.line(seed_combined_df, x="Display Day", y="Average Profit",title="Average Profits",color='Seed Name')
+                  hover_name='Crop')
     
     fig.update_yaxes(type='linear')
     #fig.update_layout()

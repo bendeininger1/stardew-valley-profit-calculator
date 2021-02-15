@@ -29,8 +29,9 @@ def parsed_crops_function():
     
     for i in crops:
         #split dict values into a list using the '/' serparator
-        crops[i] = str(crops[i]).split('/')#split the 'days in each cycle' into a list, covnerts to int, then sum that list returing  total days to grow
-        crops[i][0] = sum([int (x) for x in crops[i][0].split(' ')])
+        crops[i] = str(crops[i]).split('/')
+        #split the 'days in each cycle' into a list, covnerts to int, then sum that list returing  total days to grow
+        crops[i][0] = [int (x) for x in crops[i][0].split(' ')]
         #split the 'Regrow after Harvest'
         crops[i][6] = crops[i][6].split(' ')
         #convert true/false to boolean of 'Regrow after Harvest'

@@ -1,6 +1,7 @@
 import data_import
 import multipliers
 
+
 class SeedSelection:
     def __init__(self,
                  seed_number,#
@@ -9,7 +10,7 @@ class SeedSelection:
                  harvest_multiplier=None,
                  seed_price=None,
                  crop_price=None,
-                 days_to_grow=None,
+                 base_stages=None,
                  regrowth_days=None,
                  growing_seasons=None):
         
@@ -19,7 +20,7 @@ class SeedSelection:
         self.harvest_multiplier = multipliers.average_harvest_yield(seed_number)
         self.seed_price = int(data_import.parsed_object_information[seed_number][1])
         self.crop_price = int(data_import.parsed_object_information[data_import.parsed_crops[seed_number][3]][1])
-        self.days_to_grow = int(data_import.parsed_crops[seed_number][0])
+        self.base_stages = data_import.parsed_crops[seed_number][0]
         self.regrowth_days = int(data_import.parsed_crops[seed_number][4])
         self.growing_seasons =data_import.parsed_crops[seed_number][1] #growing_seasons #['spring']
         ### need to add seed1.quality_multiplier
@@ -32,7 +33,9 @@ class Fertilizer:
                 quality_multiplier_other_crops=None,
                 deluxe_speed_gro_location='Pierres',
                 cost=0.0,
-                growth_multiplier=1.0):
+                growth_rate_increase=0.0):
+        self.cost=cost
+        self.growth_rate_increase=growth_rate_increase
         self.soil_type=soil_type
         self.quality_multiplier_first_crop=multipliers.quality_multiplier(farming_level,soil_type)[0]
         self.quality_multiplier_other_crops=multipliers.quality_multiplier(farming_level,soil_type)[1]
@@ -47,16 +50,16 @@ class Fertilizer:
                 pass
                 #can't buy 'Deluxe Fertilizer'
             elif soil_type == 'Speed-Gro':
-                self.growth_multiplier = 1.1
+                self.growth_rate_increase = .1
                 self.cost = 20.0
             elif soil_type == 'Deluxe Speed-Gro':
-                self.growth_multiplier = 1.25
+                self.growth_rate_increase = .25
                 if deluxe_speed_gro_location=='Oasis':
                     self.cost = 80.0
                 else:
                     self.cost = 150.0
             elif soil_type == 'Hyper Speed-Gro':
-                self.growth_multiplier = 1.33
+                self.growth_rate_increase = .33
                 #can't buy 'Hyper Speed-Gro'
             elif soil_type == 'None':
                 self.cost = 0.0
@@ -70,10 +73,10 @@ class Fertilizer:
         
 
 if __name__ == '__main__':
-    seeds=SeedSelection('472', 1).crop_count
-    print(seeds)
-    
+    print(Fertilizer('Deluxe Fertilizer',1,0).cost)
+    '''
     #x=crops
     #print(x)
     #parsed_crops()
+    '''
     
